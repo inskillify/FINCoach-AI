@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 
-from app.api import auth, users, transactions, jars, goals, alerts
+from app.api import auth, users, transactions, jars, goals, alerts, agents, ml_modules
 from app.core.config import settings
 from app.core.database import engine, Base
 
@@ -42,6 +42,8 @@ app.include_router(transactions.router, prefix="/api/v1/transactions", tags=["Tr
 app.include_router(jars.router, prefix="/api/v1/jars", tags=["Jars"])
 app.include_router(goals.router, prefix="/api/v1/goals", tags=["Goals"])
 app.include_router(alerts.router, prefix="/api/v1/alerts", tags=["Alerts"])
+app.include_router(agents.router, tags=["AI Agents"])
+app.include_router(ml_modules.router, tags=["ML Modules"])
 
 @app.get("/health")
 async def health_check():
@@ -55,7 +57,12 @@ async def root():
         "message": "Welcome to FINCoach AI Backend",
         "version": "1.0.0",
         "docs": "/docs",
-        "redoc": "/redoc"
+        "redoc": "/redoc",
+        "features": {
+            "core": ["Authentication", "Users", "Transactions", "Jars", "Goals", "Alerts"],
+            "ai_agents": ["Financial Advisor", "Risk Assessor", "Prediction Agent", "Coaching Agent"],
+            "ml_modules": ["Prediction Engine", "Transaction Categorizer", "Anomaly Detector"]
+        }
     }
 
 if __name__ == "__main__":
